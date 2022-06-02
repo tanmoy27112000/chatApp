@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart' as easyLocal;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instachatty/constants.dart';
 import 'package:instachatty/main.dart';
@@ -24,7 +23,13 @@ class _SignUpState extends State<SignUpScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
-  String? firstName, lastName, email, mobile, password, confirmPassword;
+  String? firstName,
+      lastName,
+      email,
+      mobile,
+      password,
+      confirmPassword,
+      schoolName;
   AutovalidateMode _validate = AutovalidateMode.disabled;
 
   @override
@@ -125,7 +130,7 @@ class _SignUpState extends State<SignUpScreen> {
             ).tr()),
         Padding(
           padding:
-          const EdgeInsets.only(left: 8.0, top: 32, right: 8, bottom: 8),
+              const EdgeInsets.only(left: 8.0, top: 32, right: 8, bottom: 8),
           child: Stack(
             alignment: Alignment.bottomCenter,
             children: <Widget>[
@@ -177,12 +182,14 @@ class _SignUpState extends State<SignUpScreen> {
               },
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 fillColor: isDarkMode(context) ? Colors.black54 : Colors.white,
                 hintText: easyLocal.tr('firstName'),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                    borderSide:
+                        BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Theme.of(context).errorColor),
                   borderRadius: BorderRadius.circular(25.0),
@@ -210,12 +217,49 @@ class _SignUpState extends State<SignUpScreen> {
               },
               textInputAction: TextInputAction.next,
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 fillColor: isDarkMode(context) ? Colors.black54 : Colors.white,
                 hintText: 'lastName'.tr(),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                    borderSide:
+                        BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade200),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+              ),
+            ),
+          ),
+        ),
+        ConstrainedBox(
+          constraints: BoxConstraints(minWidth: double.infinity),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+            child: TextFormField(
+              validator: validateName,
+              onSaved: (String? val) {
+                schoolName = val;
+              },
+              textInputAction: TextInputAction.next,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                fillColor: isDarkMode(context) ? Colors.black54 : Colors.white,
+                hintText: 'School name',
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide:
+                        BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Theme.of(context).errorColor),
                   borderRadius: BorderRadius.circular(25.0),
@@ -244,12 +288,14 @@ class _SignUpState extends State<SignUpScreen> {
                 mobile = val;
               },
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 fillColor: isDarkMode(context) ? Colors.black54 : Colors.white,
                 hintText: 'mobileNumber'.tr(),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                    borderSide:
+                        BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Theme.of(context).errorColor),
                   borderRadius: BorderRadius.circular(25.0),
@@ -281,14 +327,16 @@ class _SignUpState extends State<SignUpScreen> {
                     decoration: InputDecoration(
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                      fillColor: isDarkMode(context) ? Colors.black54 : Colors.white,
+                      fillColor:
+                          isDarkMode(context) ? Colors.black54 : Colors.white,
                       hintText: 'emailAddress'.tr(),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.0),
-                          borderSide:
-                              BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                          borderSide: BorderSide(
+                              color: Color(COLOR_PRIMARY), width: 2.0)),
                       errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Theme.of(context).errorColor),
+                        borderSide:
+                            BorderSide(color: Theme.of(context).errorColor),
                         borderRadius: BorderRadius.circular(25.0),
                       ),
                       focusedErrorBorder: OutlineInputBorder(
@@ -316,12 +364,14 @@ class _SignUpState extends State<SignUpScreen> {
               style: TextStyle(height: 0.8, fontSize: 18.0),
               cursorColor: Color(COLOR_PRIMARY),
               decoration: InputDecoration(
-                contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 fillColor: isDarkMode(context) ? Colors.black54 : Colors.white,
                 hintText: 'password'.tr(),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
-                    borderSide: BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                    borderSide:
+                        BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
                 errorBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Theme.of(context).errorColor),
                   borderRadius: BorderRadius.circular(25.0),
@@ -432,7 +482,6 @@ class _SignUpState extends State<SignUpScreen> {
     );
   }
 
-
   @override
   void dispose() {
     _passwordController.dispose();
@@ -445,12 +494,14 @@ class _SignUpState extends State<SignUpScreen> {
       _key.currentState!.save();
       await showProgress(context, 'creatingNewAccountPleaseWait'.tr(), false);
       dynamic result = await FireStoreUtils.firebaseSignUpWithEmailAndPassword(
-          email!.trim(),
-          password!.trim(),
-          _image,
-          firstName!,
-          lastName!,
-          mobile!);
+        email!.trim(),
+        password!.trim(),
+        _image,
+        firstName!,
+        lastName!,
+        mobile!,
+        schoolName!,
+      );
       await hideProgress();
       if (result != null && result is User) {
         MyAppState.currentUser = result;

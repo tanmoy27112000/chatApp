@@ -28,6 +28,8 @@ class User with ChangeNotifier {
 
   String appIdentifier = 'Flutter Instachatty ${Platform.operatingSystem}';
 
+  String schoolName;
+
   User(
       {this.email = '',
       this.firstName = '',
@@ -38,7 +40,8 @@ class User with ChangeNotifier {
       settings,
       this.fcmToken = '',
       this.userID = '',
-      this.profilePictureURL = ''})
+      this.profilePictureURL = '',
+      this.schoolName = ''})
       : this.lastOnlineTimestamp = lastOnlineTimestamp ?? Timestamp.now(),
         this.settings = settings ?? UserSettings();
 
@@ -59,7 +62,8 @@ class User with ChangeNotifier {
         phoneNumber: parsedJson['phoneNumber'] ?? '',
         fcmToken: parsedJson['fcmToken'] ?? '',
         userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
-        profilePictureURL: parsedJson['profilePictureURL'] ?? '');
+        profilePictureURL: parsedJson['profilePictureURL'] ?? '',
+        schoolName: parsedJson['schoolName'] ?? '');
   }
 
   factory User.fromPayload(Map<String, dynamic> parsedJson) {
@@ -68,15 +72,16 @@ class User with ChangeNotifier {
         firstName: parsedJson['firstName'] ?? '',
         lastName: parsedJson['lastName'] ?? '',
         active: parsedJson['active'] ?? false,
-        lastOnlineTimestamp:
-            Timestamp.fromMillisecondsSinceEpoch(parsedJson['lastOnlineTimestamp']),
+        lastOnlineTimestamp: Timestamp.fromMillisecondsSinceEpoch(
+            parsedJson['lastOnlineTimestamp']),
         settings: parsedJson.containsKey('settings')
             ? UserSettings.fromJson(parsedJson['settings'])
             : UserSettings(),
         phoneNumber: parsedJson['phoneNumber'] ?? '',
         userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
-        fcmToken: parsedJson['fcmToken'] ?? '');
+        fcmToken: parsedJson['fcmToken'] ?? '',
+        schoolName: parsedJson['schoolName'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -92,7 +97,8 @@ class User with ChangeNotifier {
       'lastOnlineTimestamp': this.lastOnlineTimestamp,
       'fcmToken': this.fcmToken,
       'profilePictureURL': this.profilePictureURL,
-      'appIdentifier': this.appIdentifier
+      'appIdentifier': this.appIdentifier,
+      'schoolName': this.schoolName
     };
   }
 
@@ -110,6 +116,7 @@ class User with ChangeNotifier {
       'profilePictureURL': this.profilePictureURL,
       'appIdentifier': this.appIdentifier,
       'fcmToken': this.fcmToken,
+      'schoolName': this.schoolName
     };
   }
 }

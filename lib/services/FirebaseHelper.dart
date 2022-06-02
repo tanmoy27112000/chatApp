@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
-import 'package:easy_localization/easy_localization.dart' as easyLocal;
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -168,7 +167,8 @@ class FireStoreUtils {
     }
 
     for (final pendingUser in pendingList) {
-      contactsList.add(ContactModel(type: ContactType.PENDING, user: pendingUser));
+      contactsList
+          .add(ContactModel(type: ContactType.PENDING, user: pendingUser));
     }
     for (final newFriendRequest in receivedRequests) {
       contactsList
@@ -221,7 +221,7 @@ class FireStoreUtils {
     });
 
     await Future.forEach(sentFriendsResult.docs,
-            (DocumentSnapshot<Map<String, dynamic>> receivedFriend) {
+        (DocumentSnapshot<Map<String, dynamic>> receivedFriend) {
       User pendingUser = User.fromJson(receivedFriend.data() ?? {});
       User? friendOrNull = receivedFriends.firstWhere(
           (element) => element?.userID == pendingUser.userID,
@@ -283,7 +283,7 @@ class FireStoreUtils {
     });
 
     await Future.forEach(receivedRequestsResult.docs,
-            (DocumentSnapshot<Map<String, dynamic>> document) {
+        (DocumentSnapshot<Map<String, dynamic>> document) {
       User sentFriend = User.fromJson(document.data() ?? {});
       User? sentOrNull = pendingList.firstWhere(
           (element) => element?.userID == sentFriend.userID,
@@ -602,8 +602,12 @@ class FireStoreUtils {
     yield* chatModelStreamController.stream;
   }
 
-  Future<void> sendMessage(List<User> members, bool isGroup, MessageData message,
-      ConversationModel conversationModel, bool notify) async {
+  Future<void> sendMessage(
+      List<User> members,
+      bool isGroup,
+      MessageData message,
+      ConversationModel conversationModel,
+      bool notify) async {
     var ref = firestore
         .collection(CHANNELS)
         .doc(conversationModel.id)
@@ -716,8 +720,8 @@ class FireStoreUtils {
     await channelDoc.set(conversationModel.toJson()).then((onValue) async {
       selectedUsers.add(MyAppState.currentUser!);
       for (User user in selectedUsers) {
-        ChannelParticipation channelParticipation =
-            ChannelParticipation(channel: conversationModel.id, user: user.userID);
+        ChannelParticipation channelParticipation = ChannelParticipation(
+            channel: conversationModel.id, user: user.userID);
         await createChannelParticipation(channelParticipation);
       }
       groupConversationModel = HomeConversationModel(
@@ -759,7 +763,10 @@ class FireStoreUtils {
         source: MyAppState.currentUser!.userID,
         dest: blockedUser.userID,
         createdAt: Timestamp.now());
-    await firestore.collection(REPORTS).add(blockUserModel.toJson()).then((onValue) {
+    await firestore
+        .collection(REPORTS)
+        .add(blockUserModel.toJson())
+        .then((onValue) {
       isSuccessful = true;
     });
     return isSuccessful;
@@ -893,7 +900,7 @@ class FireStoreUtils {
     if (appleCredential.status == apple.AuthorizationStatus.authorized) {
       final auth.AuthCredential credential =
           auth.OAuthProvider('apple.com').credential(
-            accessToken: String.fromCharCodes(
+        accessToken: String.fromCharCodes(
             appleCredential.credential?.authorizationCode ?? []),
         idToken: String.fromCharCodes(
             appleCredential.credential?.identityToken ?? []),
@@ -939,11 +946,12 @@ class FireStoreUtils {
 
   /// save a new user document in the USERS table in firebase firestore
   /// returns an error message on failure or null on success
-  static Future<String?> firebaseCreateNewUser(User user) async => await firestore
-      .collection(USERS)
-      .doc(user.userID)
-      .set(user.toJson())
-      .then((value) => null, onError: (e) => e);
+  static Future<String?> firebaseCreateNewUser(User user) async =>
+      await firestore
+          .collection(USERS)
+          .doc(user.userID)
+          .set(user.toJson())
+          .then((value) => null, onError: (e) => e);
 
   /// login with email and password with firebase
   /// @param email user email
@@ -1049,28 +1057,31 @@ class FireStoreUtils {
       File? image,
       String firstName,
       String lastName,
-      String mobile) async {
+      String mobile,
+      String? schoolName) async {
     try {
       auth.UserCredential result = await auth.FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: emailAddress, password: password);
       String profilePicUrl = '';
       if (image != null) {
-        updateProgress(easyLocal.tr('Uploading image, Please wait...'));
+        updateProgress('Uploading image, Please wait...');
         profilePicUrl =
             await uploadUserImageToFireStorage(image, result.user?.uid ?? '');
       }
       User user = User(
-          phoneNumber: mobile,
-          active: true,
-          lastOnlineTimestamp: Timestamp.now(),
-          settings: UserSettings(),
-          email: emailAddress,
-          firstName: firstName,
-          userID: result.user?.uid ?? '',
-          lastName: lastName,
-          fcmToken: await firebaseMessaging.getToken() ?? '',
-          profilePictureURL: profilePicUrl);
+        phoneNumber: mobile,
+        active: true,
+        lastOnlineTimestamp: Timestamp.now(),
+        settings: UserSettings(),
+        email: emailAddress,
+        firstName: firstName,
+        userID: result.user?.uid ?? '',
+        lastName: lastName,
+        fcmToken: await firebaseMessaging.getToken() ?? '',
+        profilePictureURL: profilePicUrl,
+        schoolName: schoolName ?? "",
+      );
       String? errorMessage = await firebaseCreateNewUser(user);
       if (errorMessage == null) {
         return user;
@@ -1079,27 +1090,27 @@ class FireStoreUtils {
       }
     } on auth.FirebaseAuthException catch (error) {
       print(error.toString() + '${error.stackTrace}');
-      String message = 'Couldn\'t sign up'.tr();
+      String message = 'Couldn\'t sign up';
       switch (error.code) {
         case 'email-already-in-use':
-          message = 'Email already in use, Please pick another email!'.tr();
+          message = 'Email already in use, Please pick another email!';
           break;
         case 'invalid-email':
-          message = 'Enter valid e-mail'.tr();
+          message = 'Enter valid e-mail';
           break;
         case 'operation-not-allowed':
-          message = 'Email/password accounts are not enabled'.tr();
+          message = 'Email/password accounts are not enabled';
           break;
         case 'weak-password':
-          message = 'Password must be more than 5 characters'.tr();
+          message = 'Password must be more than 5 characters';
           break;
         case 'too-many-requests':
-          message = 'Too many requests, Please try again later.'.tr();
+          message = 'Too many requests, Please try again later.';
           break;
       }
       return message;
     } catch (e) {
-      return 'Couldn\'t sign up'.tr();
+      return 'Couldn\'t sign up';
     }
   }
 

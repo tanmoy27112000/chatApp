@@ -1,7 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:instachatty/constants.dart';
 import 'package:instachatty/main.dart';
 import 'package:instachatty/model/HomeConversationModel.dart';
@@ -44,21 +42,18 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
               ? InkWell(
                   onTap: () {
                     showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Dialog(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(40)),
-                              elevation: 16,
-                        child: Container(
-                          height: 200,
-                          width: 350,
-                          child: Padding(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(40)),
+                          elevation: 16,
+                          child: Container(
+                            height: 200,
+                            width: 350,
+                            child: Padding(
                               padding: const EdgeInsets.only(
-                                  top: 40.0,
-                                  left: 16,
-                                  right: 16,
-                                  bottom: 16),
+                                  top: 40.0, left: 16, right: 16, bottom: 16),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
@@ -66,19 +61,18 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     textInputAction: TextInputAction.done,
                                     keyboardType: TextInputType.text,
                                     textCapitalization:
-                                    TextCapitalization.sentences,
+                                        TextCapitalization.sentences,
                                     controller: _groupNameController,
                                     decoration: InputDecoration(
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(25.0),
+                                              BorderRadius.circular(25.0),
                                           borderSide: BorderSide(
                                               color: Color(COLOR_ACCENT),
                                               width: 2.0)),
                                       border: OutlineInputBorder(
                                           borderRadius:
-                                          BorderRadius.circular(
-                                              25.0)),
+                                              BorderRadius.circular(25.0)),
                                       labelText: 'groupName'.tr(),
                                     ),
                                   ),
@@ -171,54 +165,63 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             );
           } else {
             snapshot.data!.remove(MyAppState.currentUser);
-            return ListView.separated(
-              separatorBuilder: (context, index) => Divider(),
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                User user = snapshot.data![index];
-                return Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(8),
-                      child: ListTile(
-                        onTap: () {
-                          if (!user.selected) {
-                            user.selected = true;
-                            _selectedUsers.add(user);
-                          } else {
-                            user.selected = false;
-                            _selectedUsers.remove(user);
-                          }
-                          setState(() {});
-                        },
-                        leading: displayCircleImage(
-                            user.profilePictureURL, 55, false),
-                        title: Text(
-                          '${user.fullName()}',
-                          style: TextStyle(
-                              color: isDarkMode(context)
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
-                        ),
-                        trailing: user.selected
-                            ? Icon(
-                                Icons.check_circle,
-                                color: isDarkMode(context)
-                                    ? Colors.white
-                                    : Colors.black,
-                              )
-                            : Container(
-                                width: 0,
-                                height: 0,
-                              ),
-                      ),
-                    ),
-                  ],
-                );
-              },
+            snapshot.data!.removeWhere(
+              (element) =>
+                  element.schoolName != MyAppState.currentUser?.schoolName,
             );
+            return snapshot.data!.length == 0
+                ? Center(
+                    child: Text(
+                        "No user found from ${MyAppState.currentUser?.schoolName}"),
+                  )
+                : ListView.separated(
+                    separatorBuilder: (context, index) => Divider(),
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      User user = snapshot.data![index];
+                      return Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: ListTile(
+                              onTap: () {
+                                if (!user.selected) {
+                                  user.selected = true;
+                                  _selectedUsers.add(user);
+                                } else {
+                                  user.selected = false;
+                                  _selectedUsers.remove(user);
+                                }
+                                setState(() {});
+                              },
+                              leading: displayCircleImage(
+                                  user.profilePictureURL, 55, false),
+                              title: Text(
+                                '${user.fullName()}',
+                                style: TextStyle(
+                                    color: isDarkMode(context)
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              ),
+                              trailing: user.selected
+                                  ? Icon(
+                                      Icons.check_circle,
+                                      color: isDarkMode(context)
+                                          ? Colors.white
+                                          : Colors.black,
+                                    )
+                                  : Container(
+                                      width: 0,
+                                      height: 0,
+                                    ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
           }
         },
       ),
