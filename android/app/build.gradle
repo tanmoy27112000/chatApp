@@ -26,22 +26,18 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-        disable 'InvalidPackage'
-    }
 
     defaultConfig {
         applicationId "com.instaflutter.chat.android"
         minSdkVersion 24
         multiDexEnabled = true
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -56,9 +52,12 @@ android {
             signingConfig signingConfigs.debug
             shrinkResources false
             minifyEnabled false
-            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    lint {
+        checkReleaseBuilds false
+        disable 'InvalidPackage'
     }
 }
 

@@ -28,7 +28,6 @@ import 'package:instachatty/ui/reauthScreen/reauth_user_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as apple;
 import 'package:uuid/uuid.dart';
-import 'package:video_compress/video_compress.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 class FireStoreUtils {
@@ -1058,7 +1057,8 @@ class FireStoreUtils {
       String firstName,
       String lastName,
       String mobile,
-      String? schoolName) async {
+      String? schoolName,
+      String selectedRole) async {
     try {
       auth.UserCredential result = await auth.FirebaseAuth.instance
           .createUserWithEmailAndPassword(
@@ -1081,6 +1081,7 @@ class FireStoreUtils {
         fcmToken: await firebaseMessaging.getToken() ?? '',
         profilePictureURL: profilePicUrl,
         schoolName: schoolName ?? "",
+        selectedRole: selectedRole,
       );
       String? errorMessage = await firebaseCreateNewUser(user);
       if (errorMessage == null) {
@@ -1120,17 +1121,7 @@ class FireStoreUtils {
   /// @param file the video file that will be compressed
   /// @return File a new compressed file with smaller size
   Future<File> _compressVideo(File file) async {
-    MediaInfo? info = await VideoCompress.compressVideo(file.path,
-        quality: VideoQuality.DefaultQuality,
-        deleteOrigin: false,
-        includeAudio: true,
-        frameRate: 24);
-    if (info != null) {
-      File compressedVideo = File(info.path!);
-      return compressedVideo;
-    } else {
-      return file;
-    }
+    return file;
   }
 
   static Future<auth.UserCredential?> reAuthUser(AuthProviders provider,

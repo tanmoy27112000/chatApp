@@ -5,9 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart' as easyLocal;
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instachatty/constants.dart';
@@ -23,6 +21,7 @@ import 'package:instachatty/services/helper.dart';
 import 'package:instachatty/ui/chat/PlayerWidget.dart';
 import 'package:instachatty/ui/fullScreenImageViewer/FullScreenImageViewer.dart';
 import 'package:instachatty/ui/fullScreenVideoViewer/FullScreenVideoViewer.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
@@ -220,7 +219,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                     child: Icon(
                                       Icons.mic,
                                       color: currentRecordingState ==
-                                          RecordingState.HIDDEN
+                                              RecordingState.HIDDEN
                                           ? Color(COLOR_PRIMARY)
                                           : Colors.red,
                                     ),
@@ -708,39 +707,59 @@ class _ChatScreenState extends State<ChatScreen> {
                 height: 12,
               ),
             ),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: 50,
-                maxWidth: 200,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Color(COLOR_ACCENT),
-                    shape: BoxShape.rectangle,
-                    borderRadius: BorderRadius.all(Radius.circular(8))),
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Stack(
-                      clipBehavior: Clip.hardEdge,
-                      alignment: Alignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 6, bottom: 6, right: 4, left: 4),
-                          child: Text(
-                            mediaUrl.isEmpty ? messageData.content : '',
-                            textAlign: TextAlign.start,
-                            textDirection: TextDirection.ltr,
-                            style: TextStyle(
-                                color: isDarkMode(context)
-                                    ? Colors.black
-                                    : Colors.white,
-                                fontSize: 16),
-                          ),
-                        ),
-                      ]),
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    //convert timestamp to datetime
+                    intl.DateFormat('hh:mm').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            messageData.created.millisecondsSinceEpoch)),
+
+                    textAlign: TextAlign.start,
+                    textDirection: TextDirection.ltr,
+                    style: TextStyle(
+                      color: isDarkMode(context) ? Colors.white : Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
-              ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minWidth: 50,
+                    maxWidth: 200,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Color(COLOR_ACCENT),
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Stack(
+                          clipBehavior: Clip.hardEdge,
+                          alignment: Alignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 6, bottom: 6, right: 4, left: 4),
+                              child: Text(
+                                mediaUrl.isEmpty ? messageData.content : '',
+                                textAlign: TextAlign.start,
+                                textDirection: TextDirection.ltr,
+                                style: TextStyle(
+                                    color: isDarkMode(context)
+                                        ? Colors.black
+                                        : Colors.white,
+                                    fontSize: 16),
+                              ),
+                            ),
+                          ]),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ]);
     }
@@ -941,35 +960,56 @@ class _ChatScreenState extends State<ChatScreen> {
               minWidth: 50,
               maxWidth: 200,
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                  color:
-                      isDarkMode(context) ? Colors.grey[600] : Colors.grey[300],
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Stack(
-                    clipBehavior: Clip.hardEdge,
-                    alignment: Alignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 6, bottom: 6, right: 4, left: 4),
-                        child: Text(
-                          mediaUrl.isEmpty ? messageData.content : '',
-                          textAlign: TextAlign.start,
-                          textDirection: TextDirection.ltr,
-                          style: TextStyle(
-                            color: isDarkMode(context)
-                                ? Colors.white
-                                : Colors.black,
-                            fontSize: 16,
+            child: Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: isDarkMode(context)
+                          ? Colors.grey[600]
+                          : Colors.grey[300],
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(8))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Stack(
+                        clipBehavior: Clip.hardEdge,
+                        alignment: Alignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 6, bottom: 6, right: 4, left: 4),
+                            child: Text(
+                              mediaUrl.isEmpty ? messageData.content : '',
+                              textAlign: TextAlign.start,
+                              textDirection: TextDirection.ltr,
+                              style: TextStyle(
+                                color: isDarkMode(context)
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontSize: 16,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ]),
-              ),
+                        ]),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    //convert timestamp to datetime
+                    intl.DateFormat('hh:mm').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                            messageData.created.millisecondsSinceEpoch)),
+
+                    textAlign: TextAlign.start,
+                    textDirection: TextDirection.ltr,
+                    style: TextStyle(
+                      color: isDarkMode(context) ? Colors.white : Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

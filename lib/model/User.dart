@@ -30,19 +30,22 @@ class User with ChangeNotifier {
 
   String schoolName;
 
-  User(
-      {this.email = '',
-      this.firstName = '',
-      this.phoneNumber = '',
-      this.lastName = '',
-      this.active = false,
-      lastOnlineTimestamp,
-      settings,
-      this.fcmToken = '',
-      this.userID = '',
-      this.profilePictureURL = '',
-      this.schoolName = ''})
-      : this.lastOnlineTimestamp = lastOnlineTimestamp ?? Timestamp.now(),
+  String selectedRole;
+
+  User({
+    this.email = '',
+    this.firstName = '',
+    this.phoneNumber = '',
+    this.lastName = '',
+    this.active = false,
+    lastOnlineTimestamp,
+    settings,
+    this.fcmToken = '',
+    this.userID = '',
+    this.profilePictureURL = '',
+    this.schoolName = '',
+    this.selectedRole = '',
+  })  : this.lastOnlineTimestamp = lastOnlineTimestamp ?? Timestamp.now(),
         this.settings = settings ?? UserSettings();
 
   String fullName() {
@@ -63,7 +66,8 @@ class User with ChangeNotifier {
         fcmToken: parsedJson['fcmToken'] ?? '',
         userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
-        schoolName: parsedJson['schoolName'] ?? '');
+        schoolName: parsedJson['schoolName'] ?? '',
+        selectedRole: parsedJson['selectedRole'] ?? '');
   }
 
   factory User.fromPayload(Map<String, dynamic> parsedJson) {
@@ -81,7 +85,8 @@ class User with ChangeNotifier {
         userID: parsedJson['id'] ?? parsedJson['userID'] ?? '',
         profilePictureURL: parsedJson['profilePictureURL'] ?? '',
         fcmToken: parsedJson['fcmToken'] ?? '',
-        schoolName: parsedJson['schoolName'] ?? '');
+        schoolName: parsedJson['schoolName'] ?? '',
+        selectedRole: parsedJson['selectedRole'] ?? '');
   }
 
   Map<String, dynamic> toJson() {
@@ -98,7 +103,8 @@ class User with ChangeNotifier {
       'fcmToken': this.fcmToken,
       'profilePictureURL': this.profilePictureURL,
       'appIdentifier': this.appIdentifier,
-      'schoolName': this.schoolName
+      'schoolName': this.schoolName,
+      'selectedRole': this.selectedRole,
     };
   }
 
@@ -116,7 +122,8 @@ class User with ChangeNotifier {
       'profilePictureURL': this.profilePictureURL,
       'appIdentifier': this.appIdentifier,
       'fcmToken': this.fcmToken,
-      'schoolName': this.schoolName
+      'schoolName': this.schoolName,
+      'selectedRole': this.selectedRole,
     };
   }
 }

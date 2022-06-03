@@ -29,8 +29,11 @@ class _SignUpState extends State<SignUpScreen> {
       mobile,
       password,
       confirmPassword,
-      schoolName;
+      schoolName,
+      selectedRole = "teacher";
   AutovalidateMode _validate = AutovalidateMode.disabled;
+
+  List _roleItems = ["teacher", "student"];
 
   @override
   Widget build(BuildContext context) {
@@ -276,6 +279,53 @@ class _SignUpState extends State<SignUpScreen> {
             ),
           ),
         ),
+        //selector to select teacher and student
+        ConstrainedBox(
+          constraints: BoxConstraints(minWidth: double.infinity),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+            child: DropdownButtonFormField(
+              value: selectedRole,
+              items: [
+                DropdownMenuItem(
+                  value: 'teacher',
+                  child: Text('Teacher'.tr()),
+                ),
+                DropdownMenuItem(
+                  value: 'student',
+                  child: Text('Student'.tr()),
+                ),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  selectedRole = value as String;
+                });
+              },
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                fillColor: isDarkMode(context) ? Colors.black54 : Colors.white,
+                hintText: 'Role'.tr(),
+                focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25.0),
+                    borderSide:
+                        BorderSide(color: Color(COLOR_PRIMARY), width: 2.0)),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).errorColor),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade200),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+              ),
+            ),
+          ),
+        ),
         ConstrainedBox(
           constraints: BoxConstraints(minWidth: double.infinity),
           child: Padding(
@@ -501,6 +551,7 @@ class _SignUpState extends State<SignUpScreen> {
         lastName!,
         mobile!,
         schoolName!,
+        selectedRole!,
       );
       await hideProgress();
       if (result != null && result is User) {
