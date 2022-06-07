@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
-import 'package:flutter_sound/public/flutter_sound_player.dart';
 
 class PlayerWidget extends StatefulWidget {
   final String url;
@@ -144,6 +143,7 @@ class _PlayerWidgetState extends State<PlayerWidget> {
     _myPlayer.setSubscriptionDuration(Duration(milliseconds: 100));
   }
 }
+
 class CustomTrackShape extends RoundedRectSliderTrackShape {
   Rect getPreferredRect({
     required RenderBox parentBox,

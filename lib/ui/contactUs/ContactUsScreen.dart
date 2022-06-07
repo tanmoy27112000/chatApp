@@ -1,6 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:instachatty/constants.dart';
 import 'package:instachatty/services/helper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -42,11 +43,13 @@ class ContactUsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(right: 16.0, left: 16, top: 16),
+                  padding:
+                      const EdgeInsets.only(right: 16.0, left: 16, top: 16),
                   child: Text(
                     'ourAddress',
                     style: TextStyle(
-                        color: isDarkMode(context) ? Colors.white : Colors.black,
+                        color:
+                            isDarkMode(context) ? Colors.white : Colors.black,
                         fontSize: 24,
                         fontWeight: FontWeight.bold),
                   ).tr(),
@@ -63,21 +66,23 @@ class ContactUsScreen extends StatelessWidget {
                     if (await canLaunch(url)) {
                       await launch(url);
                     } else {
-                      showAlertDialog(
-                          context, 'CouldNotEmail'.tr(), 'noMailingAppFound'.tr());
+                      showAlertDialog(context, 'CouldNotEmail'.tr(),
+                          'noMailingAppFound'.tr());
                     }
                   },
                   title: Text(
                     'emailUs',
                     style: TextStyle(
-                        color: isDarkMode(context) ? Colors.white : Colors.black,
+                        color:
+                            isDarkMode(context) ? Colors.white : Colors.black,
                         fontSize: 24,
                         fontWeight: FontWeight.bold),
                   ).tr(),
                   subtitle: Text('support@instamobile.zendesk.com'),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
-                    color: isDarkMode(context) ? Colors.white54 : Colors.black54,
+                    color:
+                        isDarkMode(context) ? Colors.white54 : Colors.black54,
                   ),
                 )
               ],

@@ -1,10 +1,7 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:instachatty/constants.dart';
 import 'package:instachatty/model/ConversationModel.dart';
 import 'package:instachatty/model/HomeConversationModel.dart';
@@ -55,7 +52,8 @@ class _ConversationsState extends State<ConversationsScreen> {
       child: ListView(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 4),
+            padding:
+                const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 4),
             child: TextField(
               onChanged: _onSearch,
               textAlignVertical: TextAlignVertical.center,
@@ -80,7 +78,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                       borderSide: BorderSide(style: BorderStyle.none)),
                   hintText: tr('searchForFriends'),
                   suffixIcon: IconButton(
-                    focusColor: isDarkMode(context) ? Colors.white : Colors.black,
+                    focusColor:
+                        isDarkMode(context) ? Colors.white : Colors.black,
                     iconSize: 20,
                     icon: Icon(Icons.close),
                     onPressed: () {
@@ -106,7 +105,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                   return Container(
                     child: Center(
                       child: CircularProgressIndicator.adaptive(
-                        valueColor: AlwaysStoppedAnimation(Color(COLOR_PRIMARY)),
+                        valueColor:
+                            AlwaysStoppedAnimation(Color(COLOR_PRIMARY)),
                       ),
                     ),
                   );
@@ -148,7 +148,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                     ),
                   ),
                 );
-              } else if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+              } else if (!snapshot.hasData ||
+                  (snapshot.data?.isEmpty ?? true)) {
                 return Center(
                   child: Text(
                     'noConversationsFound',
@@ -162,8 +163,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: _conversationsSearchResult.length,
-                        itemBuilder: (context, index) =>
-                            _buildConversationRow(_conversationsSearchResult[index]))
+                        itemBuilder: (context, index) => _buildConversationRow(
+                            _conversationsSearchResult[index]))
                     : ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
@@ -225,8 +226,9 @@ class _ConversationsState extends State<ConversationsScreen> {
                             '${homeConversationModel.conversationModel?.name}',
                             style: TextStyle(
                               fontSize: 17,
-                              color:
-                                  isDarkMode(context) ? Colors.white : Colors.black,
+                              color: isDarkMode(context)
+                                  ? Colors.white
+                                  : Colors.black,
                               fontFamily: Platform.isIOS ? 'sanFran' : 'Roboto',
                             ),
                           ),
@@ -235,8 +237,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                             child: Text(
                               '${homeConversationModel.conversationModel?.lastMessage} • ${formatTimestamp(homeConversationModel.conversationModel?.lastMessageDate.seconds ?? 0)}',
                               maxLines: 1,
-                              style:
-                                  TextStyle(fontSize: 14, color: Color(0xffACACAC)),
+                              style: TextStyle(
+                                  fontSize: 14, color: Color(0xffACACAC)),
                             ),
                           ),
                         ],
@@ -247,11 +249,12 @@ class _ConversationsState extends State<ConversationsScreen> {
               ),
             ),
           )
-        : fireStoreUtils
-                .validateIfUserBlocked(homeConversationModel.members.first.userID)
+        : fireStoreUtils.validateIfUserBlocked(
+                homeConversationModel.members.first.userID)
             ? Container(width: 0, height: 0)
             : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8.0),
                 child: InkWell(
                   onTap: () {
                     push(
@@ -265,7 +268,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                         alignment: Alignment.bottomRight,
                         children: <Widget>[
                           displayCircleImage(
-                              homeConversationModel.members.first.profilePictureURL,
+                              homeConversationModel
+                                  .members.first.profilePictureURL,
                               60,
                               false),
                           Positioned.directional(
@@ -276,9 +280,10 @@ class _ConversationsState extends State<ConversationsScreen> {
                               width: 12,
                               height: 12,
                               decoration: BoxDecoration(
-                                  color: homeConversationModel.members.first.active
-                                      ? Colors.green
-                                      : Colors.grey,
+                                  color:
+                                      homeConversationModel.members.first.active
+                                          ? Colors.green
+                                          : Colors.grey,
                                   borderRadius: BorderRadius.circular(100),
                                   border: Border.all(
                                       color: isDarkMode(context)
@@ -395,7 +400,8 @@ class _ConversationsState extends State<ConversationsScreen> {
                     child: Container(
                       width: 75,
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0, left: 8, right: 8),
+                        padding:
+                            const EdgeInsets.only(top: 8.0, left: 8, right: 8),
                         child: Text(
                           '${friend.firstName}',
                           textAlign: TextAlign.center,

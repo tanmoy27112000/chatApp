@@ -1,3 +1,5 @@
+// ignore_for_file: close_sinks
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -61,6 +63,14 @@ class FireStoreUtils {
       return user;
     }, onError: (e) {
       return null;
+    });
+  }
+
+  static Future<List<String>> getAllSchools() async {
+    return await firestore.collection("schools").get().then((snapshot) {
+      return snapshot.docs.map((doc) {
+        return doc.data()['name'] as String;
+      }).toList();
     });
   }
 

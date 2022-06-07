@@ -23,6 +23,8 @@ class _SignUpState extends State<SignUpScreen> {
   final ImagePicker _imagePicker = ImagePicker();
   TextEditingController _passwordController = TextEditingController();
   GlobalKey<FormState> _key = GlobalKey();
+  List<String> schoolNames = [];
+  ValueNotifier<bool> _isLoading = ValueNotifier(true);
   String? firstName,
       lastName,
       email,
@@ -30,10 +32,14 @@ class _SignUpState extends State<SignUpScreen> {
       password,
       confirmPassword,
       schoolName,
-      selectedRole = "teacher";
+      selectedRole = "Counsellor";
   AutovalidateMode _validate = AutovalidateMode.disabled;
 
-  List _roleItems = ["teacher", "student"];
+  @override
+  void initState() {
+    getSchoolName();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,15 +54,24 @@ class _SignUpState extends State<SignUpScreen> {
         iconTheme: IconThemeData(
             color: isDarkMode(context) ? Colors.white : Colors.black),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
-          child: Form(
-            key: _key,
-            autovalidateMode: _validate,
-            child: formUI(),
-          ),
-        ),
+      body: ValueListenableBuilder(
+        valueListenable: _isLoading,
+        builder: (BuildContext context, dynamic value, Widget? child) {
+          return value
+              ? Center(
+                  child: CircularProgressIndicator.adaptive(),
+                )
+              : SingleChildScrollView(
+                  child: Container(
+                    margin: EdgeInsets.only(left: 16.0, right: 16, bottom: 16),
+                    child: Form(
+                      key: _key,
+                      autovalidateMode: _validate,
+                      child: formUI(),
+                    ),
+                  ),
+                );
+        },
       ),
     );
   }
@@ -244,21 +259,31 @@ class _SignUpState extends State<SignUpScreen> {
             ),
           ),
         ),
+
         ConstrainedBox(
           constraints: BoxConstraints(minWidth: double.infinity),
           child: Padding(
             padding: const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
-            child: TextFormField(
-              validator: validateName,
-              onSaved: (String? val) {
-                schoolName = val;
+            child: DropdownButtonFormField(
+              value: schoolName,
+              items: schoolNames
+                  .map(
+                    (e) => DropdownMenuItem(
+                      value: e,
+                      child: Text(e.tr()),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                setState(() {
+                  schoolName = value as String;
+                });
               },
-              textInputAction: TextInputAction.next,
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 fillColor: isDarkMode(context) ? Colors.black54 : Colors.white,
-                hintText: 'School name',
+                hintText: 'School'.tr(),
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(25.0),
                     borderSide:
@@ -279,7 +304,8 @@ class _SignUpState extends State<SignUpScreen> {
             ),
           ),
         ),
-        //selector to select teacher and student
+
+        //selector to select Counsellor and student
         ConstrainedBox(
           constraints: BoxConstraints(minWidth: double.infinity),
           child: Padding(
@@ -288,8 +314,8 @@ class _SignUpState extends State<SignUpScreen> {
               value: selectedRole,
               items: [
                 DropdownMenuItem(
-                  value: 'teacher',
-                  child: Text('Teacher'.tr()),
+                  value: 'Counsellor',
+                  child: Text('Counsellor'.tr()),
                 ),
                 DropdownMenuItem(
                   value: 'student',
@@ -567,5 +593,12 @@ class _SignUpState extends State<SignUpScreen> {
         _validate = AutovalidateMode.onUserInteraction;
       });
     }
+  }
+
+  void getSchoolName() async {
+    _isLoading.value = true;
+    schoolNames = await FireStoreUtils.getAllSchools();
+    _isLoading.value = false;
+    print(schoolNames);
   }
 }

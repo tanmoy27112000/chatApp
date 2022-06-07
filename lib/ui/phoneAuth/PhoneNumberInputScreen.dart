@@ -5,7 +5,6 @@ import 'package:easy_localization/easy_localization.dart' as Easy;
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instachatty/constants.dart';
 import 'package:instachatty/main.dart';
@@ -21,7 +20,8 @@ File? _image;
 class PhoneNumberInputScreen extends StatefulWidget {
   final bool login;
 
-  const PhoneNumberInputScreen({Key? key, required this.login}) : super(key: key);
+  const PhoneNumberInputScreen({Key? key, required this.login})
+      : super(key: key);
 
   @override
   _PhoneNumberInputScreenState createState() => _PhoneNumberInputScreenState();
@@ -45,8 +45,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        iconTheme:
-            IconThemeData(color: isDarkMode(context) ? Colors.white : Colors.black),
+        iconTheme: IconThemeData(
+            color: isDarkMode(context) ? Colors.white : Colors.black),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -71,8 +71,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 /// user profile picture,  this is visible until we verify the
                 /// code in case of sign up with phone number
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 8.0, top: 32, right: 8, bottom: 8),
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 32, right: 8, bottom: 8),
                   child: Visibility(
                     visible: !_codeSent && !widget.login,
                     child: Stack(
@@ -123,8 +123,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(minWidth: double.infinity),
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+                      padding: const EdgeInsets.only(
+                          top: 16.0, right: 8.0, left: 8.0),
                       child: TextFormField(
                         cursorColor: Color(COLOR_PRIMARY),
                         textAlignVertical: TextAlignVertical.center,
@@ -170,8 +170,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                   child: ConstrainedBox(
                     constraints: BoxConstraints(minWidth: double.infinity),
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 16.0, right: 8.0, left: 8.0),
+                      padding: const EdgeInsets.only(
+                          top: 16.0, right: 8.0, left: 8.0),
                       child: TextFormField(
                         validator: validateName,
                         textAlignVertical: TextAlignVertical.center,
@@ -253,7 +253,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 Visibility(
                   visible: _codeSent,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
+                    padding:
+                        EdgeInsets.only(top: 32.0, right: 24.0, left: 24.0),
                     child: PinCodeTextField(
                       length: 6,
                       appContext: context,
@@ -293,10 +294,11 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 Visibility(
                   visible: !_codeSent,
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(right: 40.0, left: 40.0, top: 40.0),
+                    padding: const EdgeInsets.only(
+                        right: 40.0, left: 40.0, top: 40.0),
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(minWidth: double.infinity),
+                      constraints:
+                          const BoxConstraints(minWidth: double.infinity),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Color(COLOR_PRIMARY),
@@ -314,8 +316,9 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color:
-                                  isDarkMode(context) ? Colors.black : Colors.white),
+                              color: isDarkMode(context)
+                                  ? Colors.black
+                                  : Colors.white),
                         ),
                       ),
                     ),
@@ -327,7 +330,9 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                     child: Text(
                       'OR',
                       style: TextStyle(
-                          color: isDarkMode(context) ? Colors.white : Colors.black),
+                          color: isDarkMode(context)
+                              ? Colors.white
+                              : Colors.black),
                     ).tr(),
                   ),
                 ),
@@ -361,8 +366,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
   /// @param code the code from input from code field
   /// creates a new user from phone login
   void _submitCode(String code) async {
-    await showProgress(
-        context, widget.login ? 'Logging in...'.tr() : 'Signing up...'.tr(), false);
+    await showProgress(context,
+        widget.login ? 'Logging in...'.tr() : 'Signing up...'.tr(), false);
     try {
       if (_verificationID != null) {
         dynamic result = await FireStoreUtils.firebaseSubmitPhoneNumberCode(
@@ -374,8 +379,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
         } else if (result != null && result is String) {
           showAlertDialog(context, 'Failed', result);
         } else {
-          showAlertDialog(
-              context, 'Failed', 'Couldn\'t create new user with phone number.');
+          showAlertDialog(context, 'Failed',
+              'Couldn\'t create new user with phone number.');
         }
       } else {
         await hideProgress();
@@ -554,8 +559,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
         if (mounted) {
           auth.UserCredential userCredential =
               await auth.FirebaseAuth.instance.signInWithCredential(credential);
-          User? user =
-              await FireStoreUtils.getCurrentUser(userCredential.user?.uid ?? '');
+          User? user = await FireStoreUtils.getCurrentUser(
+              userCredential.user?.uid ?? '');
           if (user != null) {
             hideProgress();
             MyAppState.currentUser = user;
@@ -565,7 +570,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
             User user = User(
                 firstName: _firstNameController.text,
                 lastName: _firstNameController.text,
-                fcmToken: await FireStoreUtils.firebaseMessaging.getToken() ?? '',
+                fcmToken:
+                    await FireStoreUtils.firebaseMessaging.getToken() ?? '',
                 phoneNumber: phoneNumber,
                 active: true,
                 lastOnlineTimestamp: Timestamp.now(),
@@ -573,7 +579,8 @@ class _PhoneNumberInputScreenState extends State<PhoneNumberInputScreen> {
                 email: '',
                 profilePictureURL: '',
                 userID: userCredential.user?.uid ?? '');
-            String? errorMessage = await FireStoreUtils.firebaseCreateNewUser(user);
+            String? errorMessage =
+                await FireStoreUtils.firebaseCreateNewUser(user);
             hideProgress();
             if (errorMessage == null) {
               MyAppState.currentUser = user;

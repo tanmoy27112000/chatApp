@@ -1,7 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:instachatty/constants.dart';
 import 'package:instachatty/model/ContactModel.dart';
 import 'package:instachatty/model/ConversationModel.dart';
@@ -52,7 +50,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
                 contentPadding: EdgeInsets.all(0),
                 isDense: true,
                 fillColor:
-                isDarkMode(context) ? Colors.grey[700] : Colors.grey[200],
+                    isDarkMode(context) ? Colors.grey[700] : Colors.grey[200],
                 filled: true,
                 focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(
@@ -155,8 +153,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
     }
   }
 
-  _onContactButtonClicked(ContactModel contact, int index,
-      bool fromSearch) async {
+  _onContactButtonClicked(
+      ContactModel contact, int index, bool fromSearch) async {
     switch (contact.type) {
       case ContactType.ACCEPT:
         showProgress(context, 'acceptingFriendship'.tr(), false);
@@ -185,8 +183,7 @@ class _ContactsScreenState extends State<ContactsScreen> {
         break;
       case ContactType.PENDING:
         showProgress(context, 'removingFriendshipRequest'.tr(), false);
-        await fireStoreUtils.onCancelRequest(
-            contact.user);
+        await fireStoreUtils.onCancelRequest(contact.user);
         if (fromSearch) {
           _searchResult.removeAt(index);
           _contacts
